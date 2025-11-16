@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TimeInput from './TimeInput';
 import TimeDisplay from './TimeDisplay';
+import playIcon from '../assets/play-icon.svg';
+import pauseIcon from '../assets/pause-icon.svg';
+import restartIcon from '../assets/restart-icon.svg';
+import resetIcon from '../assets/reset-icon.svg';
 
 function Timer() {
   // State for input values
@@ -90,93 +94,65 @@ function Timer() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: '20px'
-    }}>
-      <h1>Countdown Timer</h1>
-
+    <div className="flex flex-col gap-[32px] w-full max-w-[800px]">
       {/* Timer Display */}
       <TimeDisplay hours={hours} minutes={minutes} seconds={seconds} />
 
       {/* Input Controls */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '10px',
-        marginTop: '20px'
-      }}>
-        <TimeInput
-          label="Hours"
-          value={inputHours}
-          onChange={setInputHours}
-          max={23}
-        />
-        <TimeInput
-          label="Minutes"
-          value={inputMinutes}
-          onChange={setInputMinutes}
-          max={59}
-        />
-        <TimeInput
-          label="Seconds"
-          value={inputSeconds}
-          onChange={setInputSeconds}
-          max={59}
-        />
+      <div className="bg-[rgba(24,24,27,0.5)] border border-solid border-[#27272a] box-border flex flex-col py-[33px] px-[33px] rounded-[16px] w-full">
+        <div className="box-border flex gap-[24px] items-center justify-center w-full">
+          <TimeInput
+            label="Hours"
+            value={inputHours}
+            onChange={setInputHours}
+            max={23}
+          />
+          <TimeInput
+            label="Minutes"
+            value={inputMinutes}
+            onChange={setInputMinutes}
+            max={59}
+          />
+          <TimeInput
+            label="Seconds"
+            value={inputSeconds}
+            onChange={setInputSeconds}
+            max={59}
+          />
+        </div>
       </div>
 
       {/* Control Buttons */}
-      <div style={{
-        display: 'flex',
-        gap: '10px',
-        marginTop: '20px'
-      }}>
+      <div className="grid grid-cols-4 gap-[16px] h-[64px] w-full">
         <button
           onClick={handleStart}
           disabled={isRunning}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: isRunning ? 'not-allowed' : 'pointer',
-            opacity: isRunning ? 0.5 : 1
-          }}
+          className={`${isRunning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#f0b100] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
         >
-          Start
+          <img src={playIcon} alt="" className="w-[20px] h-[20px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-black">Start</span>
         </button>
         <button
           onClick={handlePause}
           disabled={!isRunning}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: !isRunning ? 'not-allowed' : 'pointer',
-            opacity: !isRunning ? 0.5 : 1
-          }}
+          className={`${!isRunning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
         >
-          Pause
+          <img src={pauseIcon} alt="" className="w-[20px] h-[20px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700]">Pause</span>
         </button>
         <button
           onClick={handleRestart}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer'
-          }}
+          className="bg-[#3f3f47] opacity-50 relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          Restart
+          <img src={restartIcon} alt="" className="w-[20px] h-[20px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700]">Restart</span>
         </button>
         <button
           onClick={handleReset}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer'
-          }}
+          className="bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          Reset
+          <img src={resetIcon} alt="" className="w-[20px] h-[20px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700]">Reset</span>
         </button>
       </div>
     </div>

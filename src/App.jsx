@@ -4,7 +4,7 @@ import './App.css'
 
 function App() {
   return (
-    <div className="App">
+    <div className="bg-[#09090c] min-h-screen w-full flex items-center justify-center p-8">
       {/* Using react-router-dom Route and Switch components */}
       {/* Currently only one route, but infrastructure is ready for more routes */}
       <Switch>

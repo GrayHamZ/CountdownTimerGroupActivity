@@ -8,7 +8,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
   font-synthesis: none;
@@ -63,6 +63,19 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Start button custom styles */
+#start-button-text {
+  color: #000000;
+}
+
+.start-button-disabled {
+  background-color: #f5d580 !important;
+}
+
+.start-button-disabled #start-button-text {
+  color: #4a4a4a !important;
 }
 
 @media (prefers-color-scheme: light) {

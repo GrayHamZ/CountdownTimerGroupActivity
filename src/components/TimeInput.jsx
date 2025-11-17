@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-function TimeInput({ label, value, onChange, max }) {
+function TimeInput({ label, value, onChange, max, disabled = false }) {
   const inputRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -61,6 +61,7 @@ function TimeInput({ label, value, onChange, max }) {
               onClick={handleClick}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
+              disabled={disabled}
               className="font-arial bg-transparent border-none outline-none text-[#717182] text-[14px] text-left w-full"
             />
           </div>

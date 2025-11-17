@@ -1,25 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
-import TimeInput from './TimeInput';
+import React, { useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import TimeDisplay from './TimeDisplay';
-import playIcon from '../assets/play-icon.svg';
 import pauseIcon from '../assets/pause-icon.svg';
 import restartIcon from '../assets/restart-icon.svg';
-import resetIcon from '../assets/reset-icon.svg';
 
-function Timer() {
-  // State for input values
-  const [inputHours, setInputHours] = useState(0);
-  const [inputMinutes, setInputMinutes] = useState(0);
-  const [inputSeconds, setInputSeconds] = useState(0);
-
-  // State for countdown timer
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-
-  // State for timer control
-  const [isRunning, setIsRunning] = useState(false);
+function Timer(props) {
+  const history = useHistory();
   const intervalRef = useRef(null);
+
+  // Destructure props for easier access
+  const {
+    inputHours,
+    inputMinutes,
+    inputSeconds,
+    hours,
+    minutes,
+    seconds,
+    setHours,
+    setMinutes,
+    setSeconds,
+    isRunning,
+    setIsRunning,
+    timerCompleted,
+    setTimerCompleted,
+    justRestarted,
+    setJustRestarted,
+  } = props;
 
   // Countdown logic
   useEffect(() => {
@@ -28,7 +34,9 @@ function Timer() {
         // Check if timer has reached 0
         if (hours === 0 && minutes === 0 && seconds === 0) {
           setIsRunning(false);
+          setTimerCompleted(true);
           clearInterval(intervalRef.current);
+          alert("Timer completed!");
           return;
         }
 
@@ -56,41 +64,60 @@ function Timer() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, hours, minutes, seconds]);
+  }, [isRunning, hours, minutes, seconds, setHours, setMinutes, setSeconds, setIsRunning, setTimerCompleted]);
 
-  const handleStart = () => {
-    if (!isRunning) {
-      // If timer is at 0:00:00, set from input values
+  // Navigate to Set Timer page
+  const handleSetTimer = () => {
+    history.push('/set-timer');
+  };
+
+  // Handle Pause/Resume/Start button
+  const handleToggle = () => {
+    if (isRunning) {
+      // Pause
+      setIsRunning(false);
+    } else {
+      // Start or Resume
       if (hours === 0 && minutes === 0 && seconds === 0) {
+        // Starting from input values
         setHours(inputHours);
         setMinutes(inputMinutes);
         setSeconds(inputSeconds);
       }
-      // Resume from current time (whether it's paused or starting fresh)
       setIsRunning(true);
+      setJustRestarted(false);
+      setTimerCompleted(false);
     }
   };
 
-  const handlePause = () => {
-    setIsRunning(false);
-  };
-
+  // Handle Restart button
   const handleRestart = () => {
-    // Reset to input values and start immediately
     setHours(inputHours);
     setMinutes(inputMinutes);
     setSeconds(inputSeconds);
-    setIsRunning(true);
+    setIsRunning(false);
+    setJustRestarted(true);
+    setTimerCompleted(false);
   };
 
-  const handleReset = () => {
-    setIsRunning(false);
-    setHours(0);
-    setMinutes(0);
-    setSeconds(0);
-    setInputHours(0);
-    setInputMinutes(0);
-    setInputSeconds(0);
+  // Determine pause button label
+  const getPauseButtonLabel = () => {
+    if (justRestarted) return "Start";
+    if (isRunning) return "Pause";
+    if (hours > 0 || minutes > 0 || seconds > 0) return "Resume";
+    return "Start";
+  };
+
+  // Determine if pause button is disabled
+  const isPauseButtonDisabled = () => {
+    if (timerCompleted) return true;
+    if (inputHours === 0 && inputMinutes === 0 && inputSeconds === 0) return true;
+    return false;
+  };
+
+  // Determine if restart button is disabled
+  const isRestartButtonDisabled = () => {
+    return hours === inputHours && minutes === inputMinutes && seconds === inputSeconds;
   };
 
   return (
@@ -98,61 +125,31 @@ function Timer() {
       {/* Timer Display */}
       <TimeDisplay hours={hours} minutes={minutes} seconds={seconds} />
 
-      {/* Input Controls */}
-      <div className="bg-[rgba(24,24,27,0.5)] border border-solid border-[#27272a] box-border flex flex-col py-[33px] px-[33px] rounded-[16px] w-full">
-        <div className="box-border flex gap-[24px] items-center justify-center w-full">
-          <TimeInput
-            label="Hours"
-            value={inputHours}
-            onChange={setInputHours}
-            max={23}
-          />
-          <TimeInput
-            label="Minutes"
-            value={inputMinutes}
-            onChange={setInputMinutes}
-            max={59}
-          />
-          <TimeInput
-            label="Seconds"
-            value={inputSeconds}
-            onChange={setInputSeconds}
-            max={59}
-          />
-        </div>
-      </div>
-
       {/* Control Buttons */}
-      <div className="grid grid-cols-4 gap-[16px] h-[64px] w-full">
+      <div className="grid grid-cols-3 gap-[16px] h-[64px] w-full">
         <button
-          onClick={handleStart}
-          disabled={isRunning}
-          className={`${isRunning ? 'cursor-not-allowed' : 'cursor-pointer'} bg-[#f0b100] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
+          onClick={handleSetTimer}
+          className="bg-[#f0b100] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          <img src={playIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
-          <span className={`font-arial leading-[20px] text-[14px] mx-[3px] ${isRunning ? 'text-black opacity-100' : 'text-white'}`}>Start</span>
+          <span className="font-arial leading-[20px] text-[14px]">Set Timer</span>
         </button>
         <button
-          onClick={handlePause}
-          disabled={!isRunning}
-          className={`${!isRunning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
+          onClick={handleToggle}
+          disabled={isPauseButtonDisabled()}
+          className={`${isPauseButtonDisabled() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
         >
           <img src={pauseIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
-          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">Pause</span>
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">
+            {getPauseButtonLabel()}
+          </span>
         </button>
         <button
           onClick={handleRestart}
-          className="bg-[#3f3f47] opacity-50 relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
+          disabled={isRestartButtonDisabled()}
+          className={`${isRestartButtonDisabled() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
         >
           <img src={restartIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
           <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">Restart</span>
-        </button>
-        <button
-          onClick={handleReset}
-          className="bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
-        >
-          <img src={resetIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
-          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">Reset</span>
         </button>
       </div>
     </div>

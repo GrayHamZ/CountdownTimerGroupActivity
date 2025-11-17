@@ -127,32 +127,32 @@ function Timer() {
         <button
           onClick={handleStart}
           disabled={isRunning}
-          className={`${isRunning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#f0b100] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
+          className={`${isRunning ? 'cursor-not-allowed' : 'cursor-pointer'} bg-[#f0b100] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
         >
-          <img src={playIcon} alt="" className="w-[20px] h-[20px]" />
-          <span className="font-arial leading-[20px] text-[14px] text-black">Start</span>
+          <img src={playIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
+          <span className={`font-arial leading-[20px] text-[14px] mx-[3px] ${isRunning ? 'text-black opacity-100' : 'text-white'}`}>Start</span>
         </button>
         <button
           onClick={handlePause}
           disabled={!isRunning}
           className={`${!isRunning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 border-none`}
         >
-          <img src={pauseIcon} alt="" className="w-[20px] h-[20px]" />
-          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700]">Pause</span>
+          <img src={pauseIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">Pause</span>
         </button>
         <button
           onClick={handleRestart}
           className="bg-[#3f3f47] opacity-50 relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          <img src={restartIcon} alt="" className="w-[20px] h-[20px]" />
-          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700]">Restart</span>
+          <img src={restartIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">Restart</span>
         </button>
         <button
           onClick={handleReset}
           className="bg-[#3f3f47] relative rounded-[8px] shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          <img src={resetIcon} alt="" className="w-[20px] h-[20px]" />
-          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700]">Reset</span>
+          <img src={resetIcon} alt="" className="w-[20px] h-[20px] mx-[3px]" />
+          <span className="font-arial leading-[20px] text-[14px] text-[#fdc700] mx-[3px]">Reset</span>
         </button>
       </div>
     </div>
